@@ -1,16 +1,12 @@
 import { useMemo, useState } from "react";
 import "./App.css";
-import * as Slider from '@radix-ui/react-slider';
-import * as Checkbox from '@radix-ui/react-checkbox';
-import { CheckIcon } from '@radix-ui/react-icons';
+import { motion } from "framer-motion";
 
 import HomeAdvantage from "./components/HomeAdvantage";
-import TravelAdvantage from "./components/TravelAdvantage";
 import { generateSeasonData, getData, SeasonData } from "./utils/data";
-import GapAdvantage from "./components/GapAdvantage";
-import TeamStats from "./components/TeamStats";
 import RegressionChart from "./components/RegressionChart";
 import SeasonMeansAfterTravel from "./components/SeasonMeansAfterTravel";
+import YearSelector from "./components/YearSelector";
 
 
 export const GRAPH_W = 1000;
@@ -35,39 +31,9 @@ function App() {
 
     return (
         <div className="relative">
-            <div hidden={!selectedTeam} className="text-6xl cursor-pointer absolute left-0 w-0"
-                 onClick={() => selectTeam(null)}
-            >
-                ←
-            </div>
-            <div className="w-full pb-10 horizontal-container">
-                <div className="w-1/2">
-                    <p className="text-8xl pb-4">{ year }</p>
+            <div hidden={!selectedTeam} className="text-6xl cursor-pointer absolute left-0 w-0" onClick={() => selectTeam(null)}>←</div>
+            <YearSelector year={year} setYear={setYear} allYears={allYears} setAllYears={setAllYears} />
 
-                    <div className="horizontal-container">
-                        <Slider.Root className="SliderRoot w-full" defaultValue={[year - 2000]} max={23} step={1}
-                                     onValueChange={([val]: number[]) => {
-                                         if (allYears) setAllYears(false);
-                                         setYear(val + 2000);
-                                     }}
-                        >
-                            <Slider.Track className="SliderTrack">
-                                <Slider.Range className="SliderRange" />
-                            </Slider.Track>
-                            <Slider.Thumb className="SliderThumb" aria-label="Volume" />
-                        </Slider.Root>
-
-                        <Checkbox.Root className="CheckboxRoot shrink-0 ml-8" id="c1" defaultChecked={allYears}
-                                       onCheckedChange={(a) => setAllYears(!!a)}
-                        >
-                            <Checkbox.Indicator className="CheckboxIndicator">
-                                <CheckIcon />
-                            </Checkbox.Indicator>
-                        </Checkbox.Root>
-                        <label className="Label shrink-0 ml-2" htmlFor="c1">All Seasons</label>
-                    </div>
-                </div>
-            </div>
 
             <div hidden={!selectedTeam} className="horizontal-container">
                 <div>

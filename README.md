@@ -23,3 +23,8 @@ Our visualization for season-by-season data.
 
 One of the more interesting methods we learned about was Granger Causation
 
+#Citations
+
+https://www.baseball-reference.com/bullpen/OPS
+We are citing this baseball reference article, where we got the equation for OPS+
+

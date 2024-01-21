@@ -56,6 +56,10 @@ export type TeamData = {
     games: TeamGame[],
     name: string,
     avg_opsp: number,
+
+    wins: number,
+    wins_home: number,
+    wins_away: number,
 }
 
 export type SeasonData = {[t: string]: TeamData};
@@ -123,6 +127,10 @@ export function generateSeasonData(data: MlbDatapoint[]): SeasonData[] {
         for (let [teamName, team] of Object.entries(season)) {
             team.name = teamName;
             team.avg_opsp = avg(team.games.map(g => g.opsp));
+
+            team.wins = team.games.filter(g => g.score > g.opponent_score).length;
+            team.wins_home = team.games.filter(g => g.home && g.score > g.opponent_score).length;
+            team.wins_away = team.wins - team.wins_home;
 
             for (let i = 0; i < team.games.length; i++) {
                 // Calculate a weighted agregate travel fatigue over a week long period

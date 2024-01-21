@@ -43,8 +43,6 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
         };
     });
 
-
-
     // If year is specified, then show the teams from that year
     if (year !== null) {
         function CustomTooltipTeam(ps: any) {
@@ -64,7 +62,9 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
 
         return (
             <div>
-                <p className="text-3xl cursor-pointer text-left" onClick={() => setYear(null)}>← Performance Expectations for <b>{year}</b></p>
+                <p className="graph-title cursor-pointer" onClick={() => setYear(null)}>
+                    ← Overperformance Frequencies for <b>{year}</b>
+                </p>
                 <Chart.BarChart width={GRAPH_W} height={GRAPH_H} data={seasonResults[year - 2000].teams}
                                 onClick={(e: any) => ps.selectTeam(seasonResults[year - 2000].teams[e.activeTooltipIndex].name)}
                 >
@@ -107,17 +107,20 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
     }
 
     return (
-        <Chart.BarChart width={GRAPH_W} height={GRAPH_H} data={seasonAverages}
-                        onClick={(e: any) => setYear(e.activeTooltipIndex + 2000)}
-        >
-            <Chart.CartesianGrid strokeDasharray="3 3"  stroke="gray" />
-            <Chart.XAxis dataKey={"season"} minTickGap={1} tick={{ fontSize: "12px" }}/>
-            <Chart.YAxis tick={{ fill: 'lightgray' }} />
-            <Chart.Legend />
-            <Chart.Tooltip content={<CustomTooltip />} />
-            <Chart.Bar dataKey="travel" fill="#67ce8e" />
-            <Chart.Bar dataKey="stay" fill="#dd8c85" />
-            <Chart.Bar dataKey="gap" fill="#349fd8" />
-        </Chart.BarChart>
+        <div>
+            <p className="graph-title">Overperformance Frequency as a Function of Game Situation</p>
+            <Chart.BarChart width={GRAPH_W} height={GRAPH_H} data={seasonAverages}
+                            onClick={(e: any) => setYear(e.activeTooltipIndex + 2000)}
+            >
+                <Chart.CartesianGrid strokeDasharray="3 3"  stroke="gray" />
+                <Chart.XAxis dataKey={"season"} minTickGap={1} tick={{ fontSize: "12px" }}/>
+                <Chart.YAxis tick={{ fill: 'lightgray' }} />
+                <Chart.Legend />
+                <Chart.Tooltip content={<CustomTooltip />} />
+                <Chart.Bar dataKey="travel" fill="#67ce8e" />
+                <Chart.Bar dataKey="stay" fill="#dd8c85" />
+                <Chart.Bar dataKey="gap" fill="#349fd8" />
+            </Chart.BarChart>
+        </div>
     );
 }

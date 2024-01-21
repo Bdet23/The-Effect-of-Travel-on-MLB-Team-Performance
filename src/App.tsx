@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 
 import HomeAdvantage from "./components/HomeAdvantage";
 import { generateSeasonData, getData, SeasonData } from "./utils/data";
-import RegressionChart from "./components/RegressionChart";
-import SeasonMeansAfterTravel from "./components/SeasonMeansAfterTravel";
 import YearSelector from "./components/YearSelector";
+import Team from "./components/Team";
+import League from "./components/League";
 
 
 export const GRAPH_W = 1000;
@@ -34,27 +34,14 @@ function App() {
             <div hidden={!selectedTeam} className="text-6xl cursor-pointer absolute left-0 w-0" onClick={() => selectTeam(null)}>←</div>
             <YearSelector year={year} setYear={setYear} allYears={allYears} setAllYears={setAllYears} />
 
+            {
+                selectedTeam ? (
+                    <Team season={currentSeason} team={selectedTeam!} />
+                ) : (
+                    <League seasons={seasons} selectTeam={selectTeam} year={year} />
+                )
+            }
 
-            <div hidden={!selectedTeam} className="horizontal-container">
-                <div>
-                    <p className="text-4xl pb-4">{ selectedTeam }</p>
-                    { selectedTeam && <TeamStats season={currentSeason} team={selectedTeam} /> }
-                </div>
-            </div>
-
-            <div style={{
-                     position: "relative",
-                     transition: "overflow 0.5s ease",
-                     ...(selectedTeam ? { overflow: "hidden" } : {})
-                 }}>
-                <div className="horizontal-container">
-                    <div>
-                        <SeasonMeansAfterTravel seasons={seasons} selectTeam={selectTeam} />
-                        <RegressionChart season={currentSeason} selectTeam={selectTeam} />
-                        <HomeAdvantage season={currentSeason} selectTeam={selectTeam} />
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }

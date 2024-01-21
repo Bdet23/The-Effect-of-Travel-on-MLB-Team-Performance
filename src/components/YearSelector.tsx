@@ -1,5 +1,3 @@
-import { useMemo, useState } from "react";
-import "./App.css";
 import * as Slider from '@radix-ui/react-slider';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
@@ -35,7 +33,7 @@ export default function YearSelector(ps: {
                             <CheckIcon />
                         </Checkbox.Indicator>
                     </Checkbox.Root>
-                    <label className="Label shrink-0 ml-2" htmlFor="c1">All Seasons</label>
+                    <label className="Label shrink-0 ml-2" htmlFor="c1">All</label>
                 </div>
             </div>
         </div>

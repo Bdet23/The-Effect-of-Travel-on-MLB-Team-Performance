@@ -25,16 +25,20 @@ export default function HomeAdvantage(ps: { season: SeasonData, selectTeam: (s: 
     }
 
     return (
-        <Chart.BarChart width={GRAPH_W} height={GRAPH_H} data={teams}
-                        onClick={(e: any) => ps.selectTeam(teams[e.activeTooltipIndex].name)}
-        >
-            <Chart.CartesianGrid strokeDasharray="3 3"  stroke="gray" />
-            <Chart.XAxis dataKey="name" minTickGap={1} tick={{ fontSize: "12px" }}/>
-            <Chart.YAxis tick={{ fill: 'lightgray' }} />
-            <Chart.Tooltip content={<CustomTooltip />} />
-            <Chart.Legend />
-            <Chart.Bar dataKey="wins_home" fill="#67ce8e" />
-            <Chart.Bar dataKey="wins_away" fill="#dd8c85" />
-        </Chart.BarChart>
+        <div>
+            <div className="graph-title">Effect of Home Field Advantage on Wins</div>
+
+            <Chart.BarChart width={GRAPH_W} height={GRAPH_H} data={teams}
+                            onClick={(e: any) => ps.selectTeam(teams[e.activeTooltipIndex].name)}
+            >
+                <Chart.CartesianGrid strokeDasharray="3 3"  stroke="gray" />
+                <Chart.XAxis dataKey="name" minTickGap={1} tick={{ fontSize: "12px" }}/>
+                <Chart.YAxis tick={{ fill: 'lightgray' }} />
+                <Chart.Tooltip content={<CustomTooltip />} />
+                <Chart.Legend />
+                <Chart.Bar dataKey="wins_home" fill="#67ce8e" />
+                <Chart.Bar dataKey="wins_away" fill="#dd8c85" />
+            </Chart.BarChart>
+        </div>
     );
 }

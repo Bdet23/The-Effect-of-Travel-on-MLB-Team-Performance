@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as Chart from "recharts";
 import { GRAPH_H, GRAPH_W } from "../App";
 import { SeasonData } from "../utils/data";
+import StandardDeviation from "./StandardDeviation";
 
 
 // Calculate the percentage of values in a list grater than a number pivot
@@ -18,7 +19,7 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
     const [year, setYear] = useState(null as null | number);
 
 
-    // For each season, calculate whether teams did better than average in travelling games, staying games, or gap games
+    // For each season, calculate whether teams did better than average in travelling games, staying games, or break games
     const seasonResults = ps.seasons.map((season, i) => {
 
         // Calculate the percent of each teams games which was above
@@ -27,12 +28,12 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
         const teamPercents = Object.values(season).map(team => {
             const afterTravelOpsps = team.games.filter(g => g.distance).map(g => g.opsp);
             const afterStayOpsps = team.games.filter(g => g.distance === 0).map(g => g.opsp);
-            const afterGapOpsps = team.games.filter(g => g.distance === null).map(g => g.opsp);
+            const afterBreakOpsps = team.games.filter(g => g.distance === null).map(g => g.opsp);
 
             return {
                 travel: percentAbove(team.avg_opsp, afterTravelOpsps),
                 stay: percentAbove(team.avg_opsp, afterStayOpsps),
-                gap: percentAbove(team.avg_opsp, afterGapOpsps),
+                break: percentAbove(team.avg_opsp, afterBreakOpsps),
                 name: team.name,
             };
         });
@@ -46,7 +47,7 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
     // If year is specified, then show the teams from that year
     if (year !== null) {
         function CustomTooltipTeam(ps: any) {
-            const team = seasonResults[year! - 2000].teams.find(t => t.name === ps.label);
+            const team = seasonResults[year! - 2000]?.teams?.find(t => t.name === ps.label);
             return !team ? null : (
                 <div className="text-left bg-gray-800/[.9] p-3 w-80 rounded">
                     <div className="font-bold">{team.name}</div>
@@ -55,7 +56,7 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
                     <br/>
                     Overperformance After Staying: {team.stay.toString().substring(0,6)}%
                     <br/>
-                    Overperformance After Gap: {team.gap.toString().substring(0,6)}%
+                    Overperformance After Break: {team.break.toString().substring(0,6)}%
                 </div>
             );
         }
@@ -75,7 +76,7 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
                     <Chart.Tooltip content={<CustomTooltipTeam />} />
                     <Chart.Bar dataKey="travel" fill="#67ce8e" />
                     <Chart.Bar dataKey="stay" fill="#dd8c85" />
-                    <Chart.Bar dataKey="gap" fill="#349fd8" />
+                    <Chart.Bar dataKey="break" fill="#349fd8" />
                 </Chart.BarChart>
             </div>
         );
@@ -87,7 +88,7 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
         season,
         travel: average(teams.map(t => t.travel)),
         stay: average(teams.map(t => t.stay)),
-        gap: average(teams.map(t => t.gap)),
+        break: average(teams.map(t => t.break)),
     }));
 
     function CustomTooltip(ps: any) {
@@ -101,14 +102,17 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
                 <br/>
                 Overperformance After Staying: {seasonAverages[ps.label - 2000].stay.toString().substring(0,6)}%
                 <br/>
-                Overperformance After Gap: {seasonAverages[ps.label - 2000].gap.toString().substring(0,6)}%
+                Overperformance After Break: {seasonAverages[ps.label - 2000].break.toString().substring(0,6)}%
             </div>
         );
     }
 
     return (
-        <div>
-            <p className="graph-title">Overperformance Frequency as a Function of Game Situation</p>
+        <div className="vertical-container">
+            <p className="graph-title">Probability of Overperformance in Different Situations</p>
+            <p className="graph-subtitle w-15">
+
+            </p>
             <Chart.BarChart width={GRAPH_W} height={GRAPH_H} data={seasonAverages}
                             onClick={(e: any) => setYear(e.activeTooltipIndex + 2000)}
             >
@@ -119,8 +123,20 @@ export default function SeasonMeansAfterTravel(ps: { seasons: SeasonData[], sele
                 <Chart.Tooltip content={<CustomTooltip />} />
                 <Chart.Bar dataKey="travel" fill="#67ce8e" />
                 <Chart.Bar dataKey="stay" fill="#dd8c85" />
-                <Chart.Bar dataKey="gap" fill="#349fd8" />
+                <Chart.Bar dataKey="break" fill="#349fd8" />
             </Chart.BarChart>
+
+            <div className="pt-4 graph-subtitle">
+                Travel Mean = <em>48.992</em>, Standard Deviation = <em>9.9027</em>
+                <br/>
+                No Travel Mean = <em>49.084</em>, Standard Deviation = <em>3.6110</em>
+                <br/>
+                Break Mean = <em>49.859</em>, Standard Deviation = <em>10.796</em>
+                <br/>
+                <br/>
+                Conclusion: A team is equally likely perform better than average the day after traveling than the day after
+                having back-to-back games in the same city, or even the day after a break.
+            </div>
         </div>
     );
 }

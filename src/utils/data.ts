@@ -50,6 +50,7 @@ export type TeamGame = {
     score: number,
     opponent_score: number,
     opponent: string,
+    score_difference: number,
 }
 
 export type TeamData = {
@@ -100,6 +101,7 @@ export function generateSeasonData(data: MlbDatapoint[]): SeasonData[] {
             score: game.home_score,
             opponent_score: game.away_score,
             opponent: game.away_team,
+            score_difference: game.home_score - game.away_score,
         });
 
         // Add the game to the away team's record
@@ -118,6 +120,7 @@ export function generateSeasonData(data: MlbDatapoint[]): SeasonData[] {
             score: game.away_score,
             opponent_score: game.home_score,
             opponent: game.home_team,
+            score_difference: game.away_score - game.home_score,
         });
     }
 
@@ -135,10 +138,11 @@ export function generateSeasonData(data: MlbDatapoint[]): SeasonData[] {
             for (let i = 0; i < team.games.length; i++) {
                 // Calculate a weighted agregate travel fatigue over a week long period
                 let currentCity = team.games[i].city;
-                for (let j = 1; j < Math.min(team.games.length - i - 1, 2); j++) {
-                    if (team.games[i + j].city !== currentCity) {
-                        team.games[i].fatigue += getDistance(cities[currentCity], cities[team.games[i + j].city]) / (j**2 * 100_000);
-                        currentCity = team.games[i + j].city;
+                for (let j = i; j >= Math.max(0, i - 10); j--) {
+                    const iterationNum = i - j + 1;
+                    if (team.games[j].city !== currentCity) {
+                        team.games[i].fatigue += getDistance(cities[currentCity], cities[team.games[j].city]) / (iterationNum * 100_000);
+                        currentCity = team.games[j].city;
                     }
                 }
             }

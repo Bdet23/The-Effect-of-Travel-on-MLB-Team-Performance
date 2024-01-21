@@ -29,18 +29,19 @@ export default function RegressionChart(ps: { season: SeasonData, selectTeam: (s
     }
 
     return (
-        <>
+        <div className="vertical-container">
+            <div className="graph-title">Correlation between Time Since Travel and Performance by Team</div>
+            <div className="graph-subtitle">(No consistent relationship)</div>
             <Chart.BarChart width={GRAPH_W} height={GRAPH_H} data={regressions}
                             onClick={(e: any) => ps.selectTeam(teams[e.activeTooltipIndex].name)}
             >
                 <Chart.CartesianGrid strokeDasharray="3 3" stroke="gray" />
                 <Chart.XAxis interval={0} dataKey="name" tick={{ fontSize: "12px", fill: "gray" }} />
-                <Chart.YAxis tick={{ fill: "lightgray" }} />
+                <Chart.YAxis tick={false} />
                 <Chart.Tooltip content={<CustomTooltip />} />
                 <Chart.Legend />
                 <Chart.Bar dataKey="slope" fill="#67ce8e" />
             </Chart.BarChart>
-            Mean Slope = {meanSlope.toString().substring(0, 6)}
-        </>
+        </div>
     );
 }

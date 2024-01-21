@@ -20,6 +20,14 @@ html {
     align-items: center;
 }
 
+.vertical-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: center;
+}
+
 .graph-title {
     font-size: 24px;
     padding-bottom: 15px;
@@ -27,9 +35,10 @@ html {
 }
 
 .graph-subtitle {
-    font-size: 12px;
+    font-size: 15px;
     padding-bottom: 10px;
-    color: #A8A8B8
+    color: #A8A8B8;
+    width: 60%;
 }
 
 
